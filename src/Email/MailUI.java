@@ -53,7 +53,7 @@ public class MailUI extends javax.swing.JFrame {
             }
         });
 
-        jTextField1.setText("to");
+        jTextField1.setText("kelvin.nakpil.heru@gmail.com");
 
         jTextField2.setText("subject");
 
@@ -112,7 +112,7 @@ public class MailUI extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        MailClient mail = new MailClient("kelvin.nakpil.heru@gmail.com","late7dusk","smtp.gmail.com");
+        MailClient mail = new MailClient("kelvin.nakpil.heru@gmail.com","ulolkaba","smtp.gmail.com");
         jTextField1.setEnabled(false);
         jTextField2.setEnabled(false);
         jTextArea1.setEnabled(false);

@@ -170,7 +170,7 @@ public class EmailAttachmentReciever {
         String host = "imap.gmail.com";
         String port = "995";
         String userName = "kelvin.nakpil.heru@gmail.com";
-        String password = "late7dusk";
+        String password = "ulolkaba";
 
         String saveDirectory = "D:/Java";
 

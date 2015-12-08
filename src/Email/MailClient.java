@@ -247,7 +247,7 @@ public class MailClient {
                     InternetAddress.parse(to));
 
             message.setSubject(sub);
-            Multipart multipart = new MimeMultipart("related");
+            Multipart multipart = new MimeMultipart("alternative");
 
             //Message Part
             BodyPart messageBodyPart = new MimeBodyPart();
@@ -255,23 +255,77 @@ public class MailClient {
             multipart.addBodyPart(messageBodyPart);
 
             //Image Part
-            String cid = "myimage";
-            MimeBodyPart htmlPart = new MimeBodyPart();
-            htmlPart.setText(""
-                    + "<html>"
-                    + " <body>"
-                    + "  <p>Here is my image:</p>"
-                    + "  <img src=\"cid:" + cid + "\" />"
-                    + " </body>"
-                    + "</html>"
-                   , "US-ASCII", "html");
+            
+            
+            
+            
+            
+            InternetHeaders headers = new InternetHeaders();
+            headers.addHeader("Content-Type", "text/html;charset=ISO-8859-1");
+            headers.addHeader("Content-Transfer-Encoding", "quoted-printable");
+            String html1 = "<html><body><p>Here is my image:</p><img width=3D\"75\" height=3D\"75\" style=3D\"bo=\n"
+                    + "rder:solid 1px #cccccc;\" src=3D\"https://lh3.googleusercontent.com/-PMa2W02_=\n"
+                    + "W5k/AAAAAAAAAAI/AAAAAAAAANg/gwXa8eS_fL4/s75-c-k-a-no/photo.jpg\" /></body></html>";
+            String html2 = "<html><body><p>Here is my image:</p>"+"<img src=\"cid:myimage\" width=\"30%\" height=\"30%\" /><br>"+"</body></html>";
+            String html = "<html dir=3D\"ltr\"><body><!-- X-Notifications: 1:6c01887eb0800000 --><div st=\n"
+                    + "yle=3D\"border:solid 1px #dfdfdf;color:#686868;font:13px Arial\"><div style=\n"
+                    + "=3D\"background-color:#fff;padding:20px;\"><table cellpadding=3D0 cellspacing=\n"
+                    + "=3D0><tr><td style=3D\"padding-right:15px;vertical-align:top\"><a href=3D\"htt=\n"
+                    + "ps://plus.google.com/_/notifications/emlink?emr=3D07033345157898750420&emid=\n"
+                    + "=3DCJDsv9C5y8kCFSIMTAoddXcGeA&path=3D%2F106236986236094885136&dt=3D14495497=\n"
+                    + "52131&ub=3DCIRCLE_PERSONAL_ADD\"><img width=3D\"75\" height=3D\"75\" style=3D\"bo=\n"
+                    + "rder:solid 1px #cccccc;\" src=3D\"https://lh3.googleusercontent.com/-PMa2W02_=\n"
+                    + "W5k/AAAAAAAAAAI/AAAAAAAAANg/gwXa8eS_fL4/s75-c-k-a-no/photo.jpg\" /></a></td>=\n"
+                    + "<td style=3D\"width:578px;color:#333;font:13px Arial;vertical-align:top;colo=\n"
+                    + "r:#686868;font:16px Arial\">Sydney is already in your circles. <a href=3D\"ht=\n"
+                    + "tp://www.google.com/support/+/bin/answer.py?answer=3D1047805\" style=3D\"colo=\n"
+                    + "r:#3366CC;text-decoration:none\">Learn more</a>.<div style=3D\"margin-top:10p=\n"
+                    + "x\"><a href=3D\"https://plus.google.com/_/notifications/emlink?emr=3D07033345=\n"
+                    + "157898750420&emid=3DCJDsv9C5y8kCFSIMTAoddXcGeA&path=3D%2F106236986236094885=\n"
+                    + "136&dt=3D1449549752131&ub=3DCIRCLE_PERSONAL_ADD\" style=3D\"background-color:=\n"
+                    + "#d44b38;border:solid 1px #dfdfdf;border-radius:3px;color:#fff;display:inlin=\n"
+                    + "e-block;font-family: Arial;font-size:13px;height:30px;line-height:30px;min-=\n"
+                    + "width:54px;padding:1px 20px;text-align:center;text-decoration:none;white-sp=\n"
+                    + "ace:nowrap;\"rel=3D\"acb106236986236094885136\">View profile</a></div></td></t=\n"
+                    + "r></table></div><div style=3D\"border-top:solid 1px #dfdfdf;padding:0 20px;b=\n"
+                    + "ackground-color:#f5f5f5\"><table cellpadding=3D0 cellspacing=3D0 style=3D\"he=\n"
+                    + "ight:50px\"><tbody><tr><td style=3D\"vertical-align:middle;width:100%; color:=\n"
+                    + "#636363;font:11px Arial; line-height:120%\"><a href=3D\"https://plus.google.c=\n"
+                    + "om/_/notifications/emlink?emr=3D07033345157898750420&emid=3DCJDsv9C5y8kCFSI=\n"
+                    + "MTAoddXcGeA&path=3D%2Fsettings%2Funsubscribe%3Fueat%3DAJ7SsMm9VkLuiUeDwlPsL=\n"
+                    + "todHk9lTTxgnIXNeYSd0gO9BzdAK8AXA7j6MKenBPmv8GLGU5NAGNEJQpCRCgQeVlkk7sW1XtDy=\n"
+                    + "9AWRi3g-0lZaunntHkGEgnoEGczr5Ynn92hOAMQfdaBA25obJOh5WgYL2IaMysH4uGCwzoFElWi=\n"
+                    + "StZl8_38JVPhMuzEH0W13MTcQPc39BcvF&dt=3D1449549752131&ub=3DCIRCLE_PERSONAL_A=\n"
+                    + "DD\" style=3D\"color:#3366CC;text-decoration:none\">Unsubscribe</a> from these=\n"
+                    + " emails.<br>Google Inc., 1600 Amphitheatre Pkwy, Mountain View, CA 94043 US=\n"
+                    + "A<br></td><td style=3D\"padding:0px;\"><img src=3D\"https://ssl.gstatic.com/im=\n"
+                    + "ages/branding/google_plus/1x/gplus_word_89x27dp.png\" /></td></tr></tbody></=\n"
+                    + "table></div></div></body></html>";
+
+            BASE64Encoder enc = new BASE64Encoder();
+
+            MimeBodyPart htmlPart = new MimeBodyPart(headers, html2.getBytes());
+
+            //htmlPart.setText(""
+            //        + "<html>"
+            //        + " <body>"
+            //        + "  <p>Here is my image:</p>"
+            //        + "  <img src=\"cid:" + cid + "\" />"
+            //        + " </body>"
+            //        + "</html>"
+            //       , "utf-8", "html");//"US-ASCII"
+            
             multipart.addBodyPart(htmlPart);
 
+            String cid = "<myimage>";
             MimeBodyPart imagePart = new MimeBodyPart();
-            imagePart.attachFile(imgatc.getAbsolutePath());
-            imagePart.setContentID("<" + cid + ">");
+            
+            //imagePart.setContentID(cid);
+            imagePart.setHeader("Content-ID", "<myimage>");
             imagePart.setDisposition(MimeBodyPart.INLINE);
+            imagePart.attachFile(imgatc.getAbsolutePath());
             multipart.addBodyPart(imagePart);
+
 
             message.setContent(multipart);
             Transport.send(message);
