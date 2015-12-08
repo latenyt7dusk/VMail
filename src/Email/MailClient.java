@@ -265,7 +265,7 @@ public class MailClient {
             headers.addHeader("Content-Transfer-Encoding", "quoted-printable");
             String html1 = "<html><body><p>Here is my image:</p><img width=3D\"75\" height=3D\"75\" style=3D\"bo=\n"
                     + "rder:solid 1px #cccccc;\" src=3D\"https://lh3.googleusercontent.com/-PMa2W02_=\n"
-                    + "W5k/AAAAAAAAAAI/AAAAAAAAANg/gwXa8eS_fL4/s75-c-k-a-no/photo.jpg\" /></body></html>";
+                    + "W5k/AAAAAAAAAAI/AAAAAAAAANg/gwXa8eS_fL4/s75-c-k-a-no/photo.jpg\" width=\"30%\" height=\"30%\" /></body></html>";
             String html2 = "<html><body><p>Here is my image:</p>"+"<img src=\"cid:myimage\" width=\"30%\" height=\"30%\" /><br>"+"</body></html>";
             String html = "<html dir=3D\"ltr\"><body><!-- X-Notifications: 1:6c01887eb0800000 --><div st=\n"
                     + "yle=3D\"border:solid 1px #dfdfdf;color:#686868;font:13px Arial\"><div style=\n"
@@ -304,7 +304,7 @@ public class MailClient {
 
             BASE64Encoder enc = new BASE64Encoder();
 
-            MimeBodyPart htmlPart = new MimeBodyPart(headers, html2.getBytes());
+            MimeBodyPart htmlPart = new MimeBodyPart(headers, html1.getBytes());
 
             //htmlPart.setText(""
             //        + "<html>"
