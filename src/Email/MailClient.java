@@ -177,7 +177,7 @@ public class MailClient {
         }
     }
 
-    public boolean SendInlinedImage(String to, String sub, String msg, File imgatc) {
+    public boolean SendImageAttachment(String to, String sub, String msg, File imgatc) {
         try {
             Session session = Session.getInstance(props,
                     new javax.mail.Authenticator() {
@@ -231,7 +231,7 @@ public class MailClient {
         }
     }
 
-    public boolean SendInlinedHTMLImage(String to, String sub, String msg, File imgatc) {
+    public boolean SendTest(String to, String sub, String msg, File imgatc) {
         try {
             Session session = Session.getInstance(props,
                     new javax.mail.Authenticator() {
