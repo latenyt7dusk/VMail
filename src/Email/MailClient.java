@@ -207,22 +207,73 @@ public class MailClient {
             baos.flush();
 
             BASE64Encoder enc = new BASE64Encoder();
-            
+
             String base64String = enc.encode(baos.toByteArray());
             baos.close();
-            
-            MimeBodyPart imagePart =null;
+
+            MimeBodyPart imagePart = null;
             InternetHeaders headers = new InternetHeaders();
             headers.addHeader("Content-Type", "image/jpeg");
             headers.addHeader("Content-Transfer-Encoding", "base64");
             imagePart = new MimeBodyPart(headers, base64String.getBytes());
             imagePart.setDisposition(MimeBodyPart.INLINE);
-            imagePart.setContentID("&lt;"+imgatc.getName()+"&gt;");
+            imagePart.setContentID("&lt;" + imgatc.getName() + "&gt;");
             imagePart.setFileName(imgatc.getName());
             multipart.addBodyPart(imagePart);
 
             message.setContent(multipart);
-           
+
+            Transport.send(message);
+
+            return true;
+        } catch (Exception er) {
+            throw new RuntimeException(er);
+        }
+    }
+
+    public boolean SendInlinedHTMLImage(String to, String sub, String msg, File imgatc) {
+        try {
+            Session session = Session.getInstance(props,
+                    new javax.mail.Authenticator() {
+                        @Override
+                        protected PasswordAuthentication getPasswordAuthentication() {
+                            return new PasswordAuthentication(username, password);
+                        }
+                    });
+
+            SMTPMessage message = new SMTPMessage(session);
+            message.setFrom(new InternetAddress(username));
+            message.setRecipients(Message.RecipientType.TO,
+                    InternetAddress.parse(to));
+
+            message.setSubject(sub);
+            Multipart multipart = new MimeMultipart("related");
+
+            //Message Part
+            BodyPart messageBodyPart = new MimeBodyPart();
+            messageBodyPart.setText(msg);
+            multipart.addBodyPart(messageBodyPart);
+
+            //Image Part
+            String cid = "myimage";
+            MimeBodyPart htmlPart = new MimeBodyPart();
+            htmlPart.setText(""
+                    + "<html>"
+                    + " <body>"
+                    + "  <p>Here is my image:</p>"
+                    + "  <img src=\"cid:" + cid + "\" />"
+                    + " </body>"
+                    + "</html>"
+                   , "US-ASCII", "html");
+            multipart.addBodyPart(htmlPart);
+
+            MimeBodyPart imagePart = new MimeBodyPart();
+            imagePart.attachFile(imgatc.getAbsolutePath());
+            imagePart.setContentID("<" + cid + ">");
+            imagePart.setDisposition(MimeBodyPart.INLINE);
+            multipart.addBodyPart(imagePart);
+
+            message.setContent(multipart);
             Transport.send(message);
 
             return true;

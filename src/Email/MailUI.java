@@ -118,7 +118,7 @@ public class MailUI extends javax.swing.JFrame {
         jTextArea1.setEnabled(false);
         boolean b = false;
         if(img != null){
-            b = mail.SendInlinedImage(jTextField1.getText(), jTextField2.getText(), jTextArea1.getText(),img);
+            b = mail.SendInlinedHTMLImage(jTextField1.getText(), jTextField2.getText(), jTextArea1.getText(),img);
         }else{
             b = mail.Send(jTextField1.getText(), jTextField2.getText(), jTextArea1.getText());
         }
