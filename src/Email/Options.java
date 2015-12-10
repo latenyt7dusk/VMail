@@ -69,7 +69,6 @@ public class Options extends javax.swing.JFrame {
             position_tf.setText(myProps.getProperty("POSITION"));
             contact_tf.setText(myProps.getProperty("CONTACT"));
             logo_tf.setText(myProps.getProperty("LOGO"));
-            myProps.list(System.out);
             
         }catch(Exception er){
             JOptionPane.showMessageDialog(this, "Error Loading System Properties");

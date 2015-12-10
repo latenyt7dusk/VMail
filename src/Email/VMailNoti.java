@@ -66,8 +66,8 @@ public class VMailNoti {
                 System.out.println("SystemTray is not supported");
             } else {
                 final PopupMenu popup = new PopupMenu();
-                Image image = ImageIO.read(new File("D:\\Nakpil Softwares\\Nakpil Softwares\\VMail\\VMail.png"));
-                final TrayIcon trayIcon = new TrayIcon(image, "VMail");
+                Image image = ImageIO.read(new File(System.getProperty("user.home") + File.separator + "Nakpil Softwares" + File.separator + "VMail" + File.separator + "VMail.png"));
+                final TrayIcon trayIcon = new TrayIcon(image, "Nakpil Softwares VMail\nDeveloped by : Kelvin Nakpil\nProgram Version : Beta");
                 final SystemTray tray = SystemTray.getSystemTray();
 
                 // Create a pop-up menu components
@@ -82,7 +82,26 @@ public class VMailNoti {
                 MenuItem exitItem = new MenuItem("Exit");
                 exitItem.addActionListener(new java.awt.event.ActionListener() {
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        tray.remove(trayIcon);
+                        System.gc();
                         System.exit(0);
+                    }
+                });
+
+                sendui.addActionListener(new java.awt.event.ActionListener() {
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        if (mailer != null) {
+                            if (mailer.isVisible()) {
+                                mailer.dispose();
+                                mailer = null;
+                            } else {
+                                mailer = new MailUI();
+                                mailer.setVisible(true);
+                            }
+                        } else {
+                            mailer = new MailUI();
+                            mailer.setVisible(true);
+                        }
                     }
                 });
 
@@ -138,6 +157,7 @@ public class VMailNoti {
                     }
                 });
                 tray.add(trayIcon);
+                trayIcon.displayMessage(null, "Nakpil Softwares VMail Started", TrayIcon.MessageType.NONE);
             }
         } catch (Exception er) {
 

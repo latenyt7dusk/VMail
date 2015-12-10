@@ -5,15 +5,25 @@
  */
 package Email;
 
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Insets;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -38,11 +48,46 @@ public class MailUI extends javax.swing.JFrame {
         }
     };
 
+    private class FileAttachment extends JButton {
+
+        private FileAttachment(String text) {
+            super("");
+            try {
+                setBorderPainted(false);
+                setFocusPainted(false);
+                setContentAreaFilled(false);
+                setFocusable(false);
+                setCursor(new Cursor(Cursor.HAND_CURSOR));
+                setName(name);
+                setMargin(new Insets(1, 2, 1, 2));
+                setText(text);
+                setFont(getFont().deriveFont(8));
+
+                if (text.toUpperCase().contains(".PNG") || text.toUpperCase().contains(".JPG") || text.toUpperCase().contains(".BMP") || text.toUpperCase().contains(".GIF")) {
+                    setIcon(new ImageIcon(ImageIO.read(getClass().getResource("Images-icon.png"))));
+                } else if (text.toUpperCase().contains(".XLS") || text.toUpperCase().contains(".XLSX") || text.toUpperCase().contains(".XLSB")) {
+                    setIcon(new ImageIcon(ImageIO.read(getClass().getResource("Excel-icon.png"))));
+                } else if (text.toUpperCase().contains(".DOC") || text.toUpperCase().contains(".DOCX")) {
+                    setIcon(new ImageIcon(ImageIO.read(getClass().getResource("Word-2-icon.png"))));
+                } else if (text.toUpperCase().contains(".PDF")) {
+                    setIcon(new ImageIcon(ImageIO.read(getClass().getResource("Adobe-PDF-Document-icon.png"))));
+                } else {
+                    setIcon(new ImageIcon(ImageIO.read(getClass().getResource("Document-Attach.png"))));
+                }
+
+            } catch (IOException ex) {
+                Logger.getLogger(MailUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+    }
+
     /**
      * Creates new form Tester
      */
     public MailUI() {
         initComponents();
+        jLabel2.setVisible(false);
     }
 
     public void getProps() throws IOException {
@@ -91,6 +136,7 @@ public class MailUI extends javax.swing.JFrame {
         jButton7 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Send Mail");
@@ -126,7 +172,7 @@ public class MailUI extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
-        jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.LINE_AXIS));
+        jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.X_AXIS));
 
         jLabel1.setBackground(new java.awt.Color(51, 153, 255));
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
@@ -134,6 +180,10 @@ public class MailUI extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Body");
         jLabel1.setOpaque(true);
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Email/GlogLoading.gif"))); // NOI18N
+        jLabel2.setText("Sending Email");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -155,6 +205,8 @@ public class MailUI extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(jButton5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton4))
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -185,10 +237,13 @@ public class MailUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton4)
-                    .addComponent(jButton5))
-                .addContainerGap())
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButton5)
+                        .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -209,12 +264,33 @@ public class MailUI extends javax.swing.JFrame {
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
         try {
+            new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        getProps();
+                    } catch (IOException ex) {
+                        Logger.getLogger(MailUI.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    jButton4.setEnabled(false);
+                    jButton5.setEnabled(false);
+                    mail = new MailClient(user, pass, smtphost);
+                    htmlbody = mail.getDefaultTemplate(jTextField2.getText(), jTextField3.getText(), HTMLBodyWriter.parse(jTextPane1), company, name, position, contact, link);
+                    filemap.put("logo", logo);
+                    jLabel2.setVisible(true);
+                    if (mail.SendInlineImage(jTextField1.getText(), jTextField2.getText(), htmlbody, filemap)) {
+                        jLabel2.setVisible(false);
+                        JOptionPane.showMessageDialog(MailUI.this, "Message Sent");
+                        dispose();
+                    } else {
+                        jButton4.setEnabled(false);
+                        jButton5.setEnabled(false);
+                        jLabel2.setVisible(false);
+                        JOptionPane.showMessageDialog(MailUI.this, "Sending Message Failed", "Sending Failure", JOptionPane.WARNING_MESSAGE);
+                    }
+                }
+            }.start();
 
-            getProps();
-            mail = new MailClient(user, pass, smtphost);
-            htmlbody = mail.getDefaultTemplate(jTextField2.getText(), jTextField3.getText(), HTMLBodyWriter.parse(jTextPane1), company, name, position, contact, link);
-            filemap.put("logo", logo);
-            mail.SendInlineImage(jTextField1.getText(), jTextField2.getText(), htmlbody, filemap);
         } catch (Exception er) {
             er.printStackTrace();
         }
@@ -225,8 +301,28 @@ public class MailUI extends javax.swing.JFrame {
         try {
             int i = Imagechooser.showDialog(this, "Select");
             if (i == JFileChooser.APPROVE_OPTION) {
-                files.add(Imagechooser.getSelectedFile());
-                filemap.put("file_" + files.size(), Imagechooser.getSelectedFile().getAbsolutePath());
+                boolean b = true;
+                for (File e : files) {
+                    if (e.equals(Imagechooser.getSelectedFile())) {
+                        b = false;
+                        break;
+                    }
+                }
+                if (b) {
+                    long size = 0;
+                    for (File e : files) {
+                        size += Files.size(e.toPath());
+                    }
+                    if (!((size / 1000) > 20000)) {
+                        files.add(Imagechooser.getSelectedFile());
+                        filemap.put("file_" + files.size(), Imagechooser.getSelectedFile().getAbsolutePath());
+                        jPanel2.add(new FileAttachment(Imagechooser.getSelectedFile().getName()));
+                        jPanel2.updateUI();
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Cannot add more Attachments.", "20mb Attachment Limit", JOptionPane.WARNING_MESSAGE);
+                    }
+
+                }
             }
         } catch (Exception er) {
 
@@ -275,6 +371,7 @@ public class MailUI extends javax.swing.JFrame {
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane2;
