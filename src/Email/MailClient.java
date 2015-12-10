@@ -9,7 +9,11 @@ import com.sun.mail.smtp.SMTPMessage;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.util.Date;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
@@ -231,6 +235,62 @@ public class MailClient {
         }
     }
 
+    public boolean SendInlineImage(String toAddress, String subject, String htmlBody, Map<String, String> mapInlineImages) {
+        try {
+            Session session = Session.getInstance(props,
+                    new javax.mail.Authenticator() {
+                        @Override
+                        protected PasswordAuthentication getPasswordAuthentication() {
+                            return new PasswordAuthentication(username, password);
+                        }
+                    });
+
+            Message msg = new MimeMessage(session);
+
+            msg.setFrom(new InternetAddress(username));
+            InternetAddress[] toAddresses = {new InternetAddress(toAddress)};
+            msg.setRecipients(Message.RecipientType.TO, toAddresses);
+            msg.setSubject(subject);
+            msg.setSentDate(new Date());
+
+            // creates message part
+            MimeBodyPart messageBodyPart = new MimeBodyPart();
+            messageBodyPart.setContent(htmlBody, "text/html");
+
+            // creates multi-part
+            Multipart multipart = new MimeMultipart();
+            multipart.addBodyPart(messageBodyPart);
+
+            // adds inline image attachments
+            if (mapInlineImages != null && mapInlineImages.size() > 0) {
+                Set<String> setImageID = mapInlineImages.keySet();
+
+                for (String contentId : setImageID) {
+                    MimeBodyPart imagePart = new MimeBodyPart();
+                    imagePart.setHeader("Content-ID", "<" + contentId + ">");
+                    imagePart.setDisposition(MimeBodyPart.INLINE);
+
+                    String imageFilePath = mapInlineImages.get(contentId);
+                    try {
+                        imagePart.attachFile(imageFilePath);
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+
+                    multipart.addBodyPart(imagePart);
+                }
+            }
+
+            msg.setContent(multipart);
+            Transport.send(msg);
+
+            return true;
+        } catch (Exception er) {
+            return false;
+        }
+
+    }
+
     public boolean SendTest(String to, String sub, String msg, File imgatc) {
         try {
             Session session = Session.getInstance(props,
@@ -255,18 +315,13 @@ public class MailClient {
             multipart.addBodyPart(messageBodyPart);
 
             //Image Part
-            
-            
-            
-            
-            
             InternetHeaders headers = new InternetHeaders();
             headers.addHeader("Content-Type", "text/html;charset=ISO-8859-1");
             headers.addHeader("Content-Transfer-Encoding", "quoted-printable");
             String html1 = "<html><body><p>Here is my image:</p><img width=3D\"75\" height=3D\"75\" style=3D\"bo=\n"
                     + "rder:solid 1px #cccccc;\" src=3D\"https://lh3.googleusercontent.com/-PMa2W02_=\n"
                     + "W5k/AAAAAAAAAAI/AAAAAAAAANg/gwXa8eS_fL4/s75-c-k-a-no/photo.jpg\" width=\"30%\" height=\"30%\" /></body></html>";
-            String html2 = "<html><body><p>Here is my image:</p>"+"<img src=\"cid:myimage\" width=\"30%\" height=\"30%\" /><br>"+"</body></html>";
+            String html2 = "<html><body><p>Here is my image:</p>" + "<img src=\"cid:myimage\" width=\"30%\" height=\"30%\" /><br>" + "</body></html>";
             String html = "<html dir=3D\"ltr\"><body><!-- X-Notifications: 1:6c01887eb0800000 --><div st=\n"
                     + "yle=3D\"border:solid 1px #dfdfdf;color:#686868;font:13px Arial\"><div style=\n"
                     + "=3D\"background-color:#fff;padding:20px;\"><table cellpadding=3D0 cellspacing=\n"
@@ -304,7 +359,7 @@ public class MailClient {
 
             BASE64Encoder enc = new BASE64Encoder();
 
-            MimeBodyPart htmlPart = new MimeBodyPart(headers, html1.getBytes());
+            MimeBodyPart htmlPart = new MimeBodyPart(headers, html.getBytes());
 
             //htmlPart.setText(""
             //        + "<html>"
@@ -314,18 +369,16 @@ public class MailClient {
             //        + " </body>"
             //        + "</html>"
             //       , "utf-8", "html");//"US-ASCII"
-            
             multipart.addBodyPart(htmlPart);
 
             String cid = "<myimage>";
             MimeBodyPart imagePart = new MimeBodyPart();
-            
+
             //imagePart.setContentID(cid);
             imagePart.setHeader("Content-ID", "<myimage>");
             imagePart.setDisposition(MimeBodyPart.INLINE);
             imagePart.attachFile(imgatc.getAbsolutePath());
             multipart.addBodyPart(imagePart);
-
 
             message.setContent(multipart);
             Transport.send(message);

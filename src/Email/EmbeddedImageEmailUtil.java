@@ -64,6 +64,7 @@ public class EmbeddedImageEmailUtil {
 
         // creates a new session with an authenticator
         Authenticator auth = new Authenticator() {
+            @Override
             public PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(userName, password);
             }
@@ -82,9 +83,10 @@ public class EmbeddedImageEmailUtil {
         // creates message part
         MimeBodyPart messageBodyPart = new MimeBodyPart();
         messageBodyPart.setContent(htmlBody, "text/html");
-
+        messageBodyPart.setHeader("Content-Type", "text/html;charset=utf-8");
+        messageBodyPart.setHeader("Content-Transfer-Encoding", "quoted-printable");
         // creates multi-part
-        Multipart multipart = new MimeMultipart();
+        Multipart multipart = new MimeMultipart("Alternative");
         multipart.addBodyPart(messageBodyPart);
 
         // adds inline image attachments
@@ -107,11 +109,12 @@ public class EmbeddedImageEmailUtil {
             }
         }
         
-        File e = new File("C:\\Users\\Late7dusk\\NSoftwares\\VThemeProps.def");
+        File e = new File("C:\\CFWP08.IX5");
         
         messageBodyPart = new MimeBodyPart();
         String filesource = e.getAbsolutePath();
         String filename = e.getName();
+        messageBodyPart.setContentID("<CFWP08>");
         DataSource source = new FileDataSource(filesource);
         messageBodyPart.setDataHandler(new DataHandler(source));
         messageBodyPart.setFileName(filename);
@@ -120,6 +123,7 @@ public class EmbeddedImageEmailUtil {
         msg.setContent(multipart);
 
         Transport.send(msg);
+        
     }
 
     public static void main(String[] args) {
@@ -127,24 +131,38 @@ public class EmbeddedImageEmailUtil {
         String host = "smtp.gmail.com";
         String port = "587";
         String mailFrom = "kelvin.nakpil.heru@gmail.com";
-        String password = "ulolkaba";
+        String password = "";
 
         // message info
         String mailTo = "kelvin.nakpil.heru@gmail.com";
         String subject = "Test e-mail with inline images";
-        StringBuffer body
-                = new StringBuffer("<html>This message contains two inline images.<br>");
-        body.append("The first image is a chart:<br>");
-        body.append("<img src=\"cid:image1\" width=\"30%\" height=\"30%\" /><br>");
-        body.append("The second one is a cube:<br>");
-        body.append("<img src=\"cid:image2\" width=\"30%\" height=\"30%\" /><br>");
-        body.append("End of message.");
+        StringBuffer body = new StringBuffer("<html>");
+        body.append("<body style=\"border:solid 1px #dfdfdf;\">");
+        body.append("<div style=\"font-weight:bold;font-size:16px;background-color:#232323;color:#dfdfdf;padding:5px\">"+subject+"<br></div>");
+        //body.append("<a href=\"https://docs.google.com/spreadsheets/d/1P882M_EikPvolcpW1bo9JgvPwhTFRsg8W_1r88_mCd0/edit#gid=1800016514\">This is a link</a> ");
+        //body.append("The first image is a chart:<br>");
+        //body.append("<img src=\"cid:image1\" width=\"30%\" height=\"30%\" /><br>");
+        //body.append("The second one is a cube:<br>");
+        //body.append("<img src=\"cid:image2\" width=\"125px\" height=\"125px\" /><br>");
+        //body.append("<div style=\"font-weight:bold;background-color:#dfdfdf;color:#636363;padding:3px;vertical-align:middle;\"><img style=\"vertical-align: middle\" src=\"cid:image1\" width=\"18px\" height=\"18px\" padding:3px;/><p>Nakpil Softwares&#8482;</p></div>");
+        body.append("<table cellpadding=3D0 cellspacing=3D0 style=3D\"height:120px\">");
+        body.append("<tr>");
+        body.append("<td>");
+        body.append("<img src=\"cid:image1\" width=\"75px\" height=\"75px\" />");
+        body.append("</td>");
+        body.append("<td style=\"vertical-align:middle; color:#636363;font:12px Arial;\">");
+        body.append("<div style=\"font-weight:bold;font-size:18px;color:#232323;\">Nakpil Softwares Company&#8482;</div>");
+        body.append("<a href=\"https://www.facebook.com/kelvin.nakpil\"style=\"color:#3366CC;font:14px Arial;font-weight:bold;text-decoration:none\">Kelvin Nakpil</a><br>Developer<br>09055550830");
+        body.append("</td>");
+        body.append("</tr>");
+        body.append("</table>");
+        body.append("</body>");
         body.append("</html>");
 
         // inline images
-        Map<String, String> inlineImages = new HashMap<String, String>();
-        inlineImages.put("image1", "E:\\Wallpapers\\minimalistic-hackers_00428560.png");
-        inlineImages.put("image2", "E:\\Wallpapers\\wp_1920x1200.jpg");
+        Map<String, String> inlineImages = new HashMap<>();
+        inlineImages.put("image1", "C:\\Documents and Settings\\HERU\\Desktop\\Billing DB\\Nsoftwares\\NSoftwares Icon Final 2.png");
+        //inlineImages.put("image2", "C:\\Documents and Settings\\HERU\\Desktop\\Billing DB\\animation.gif");
 
         try {
             EmbeddedImageEmailUtil.send(host, port, mailFrom, password, mailTo,
