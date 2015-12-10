@@ -67,7 +67,10 @@ public class HTMLBodyWriter extends HTMLWriter {
 
             HTMLWriter htmlWriter = new HTMLBodyWriter(writer, doc);
             htmlWriter.write();
-            return writer.toString();
+            String i = writer.toString().replaceAll(" style=\"margin-top: 0\"", " style=\"padding:5px;\"");
+            i = i.replaceAll("(?m)(^ *| +(?= |$))", "").replaceAll("(?m)^$([\r\n]+?)(^$[\r\n]+?^)+", "$1");
+            i = i.replaceAll("</p>", "</p><br>");
+            return i;
         } catch (Exception er) {
             return "";
         }

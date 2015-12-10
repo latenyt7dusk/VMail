@@ -145,6 +145,7 @@ public class EmbeddedImageEmailUtil {
         //body.append("The second one is a cube:<br>");
         //body.append("<img src=\"cid:image2\" width=\"125px\" height=\"125px\" /><br>");
         //body.append("<div style=\"font-weight:bold;background-color:#dfdfdf;color:#636363;padding:3px;vertical-align:middle;\"><img style=\"vertical-align: middle\" src=\"cid:image1\" width=\"18px\" height=\"18px\" padding:3px;/><p>Nakpil Softwares&#8482;</p></div>");
+        body.append("<pstyle=\"margin-top:0\">asdasd</p><pstyle=\"margin-top:0\">asdsadasd</p><pstyle=\"margin-top:0\">asdasd</p>");
         body.append("<table cellpadding=3D0 cellspacing=3D0 style=3D\"height:120px\">");
         body.append("<tr>");
         body.append("<td>");
