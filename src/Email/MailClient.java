@@ -305,25 +305,28 @@ public class MailClient {
         String HTMLBody = "";
         try {
             StringBuffer html = new StringBuffer("<html>");
+            
             //Border
-            html.append("<body style=\"border:solid 1px #dfdfdf;\">");
+            html.append("<body style=\"border:solid 1px #dfdfdf;padding:8px;\" >");
             html.append("<div style=\"font-weight:bold;font-size:16px;background-color:#232323;color:#dfdfdf;padding:5px\">");
             html.append(subject);
             html.append("<br></div>");
+            
             //Intro
             html.append("<div style=\"font-weight:bold;padding-left:40px;padding-top:30px;padding-bottom:0px;\">");
             html.append(intro);
             html.append("</div><br>");
+            
             //Body
             html.append("<pre style=\"padding-left:80px;padding-right:80px;text-align:justify;margin-left:10px;margin-rightt:10px;font:12px Arial;\">");
             html.append(body);
             html.append("</pre><br>");
 
             //Signature
-            html.append("<table cellpadding=3D0 cellspacing=3D0 style=3D\"height:120px\">");
+            html.append("<table cellpadding=3D0 cellspacing=3D0 style=3D\"height:120px;background-color:#dfdfdf\">");
             html.append("<tr>");
             html.append("<td>");
-            html.append("<img src=\"cid:logo\" width=\"75px\" height=\"75px\"/>");
+            html.append("<img src=\"cid:logo\" width=\"72px\" height=\"62px\"/>");
             html.append("</td>");
             html.append("<td style=\"vertical-align:middle; color:#636363;font:12px Arial;\">");
             html.append("<div style=\"font-weight:bold;font-size:18px;color:#232323;\">");

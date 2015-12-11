@@ -6,14 +6,14 @@
 package Email;
 
 import java.awt.Cursor;
-import java.awt.Dimension;
+import java.awt.HeadlessException;
+import java.awt.Image;
 import java.awt.Insets;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,6 +47,8 @@ public class MailUI extends javax.swing.JFrame {
             setApproveButtonText("Select");
         }
     };
+
+    private boolean sending = false;
 
     private class FileAttachment extends JButton {
 
@@ -86,8 +88,12 @@ public class MailUI extends javax.swing.JFrame {
      * Creates new form Tester
      */
     public MailUI() {
-        initComponents();
-        jLabel2.setVisible(false);
+        try {
+            initComponents();
+            setIconImage(ImageIO.read(getClass().getResource("/Email/VMail.png")));
+        } catch (IOException ex) {
+            Logger.getLogger(MailUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void getProps() throws IOException {
@@ -104,7 +110,6 @@ public class MailUI extends javax.swing.JFrame {
             position = myProps.getProperty("POSITION");
             contact = myProps.getProperty("CONTACT");
             logo = myProps.getProperty("LOGO");
-            myProps.list(System.out);
         } catch (Exception er) {
             JOptionPane.showMessageDialog(this, "Error Loading System Properties");
         } finally {
@@ -128,7 +133,6 @@ public class MailUI extends javax.swing.JFrame {
         jTextField2 = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextPane1 = new javax.swing.JTextPane();
-        jButton4 = new javax.swing.JButton();
         jTextField3 = new javax.swing.JTextField();
         jButton5 = new javax.swing.JButton();
         jTextField4 = new javax.swing.JTextField();
@@ -136,11 +140,14 @@ public class MailUI extends javax.swing.JFrame {
         jButton7 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        jButton4 = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Send Mail");
         setResizable(false);
+
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         jTextField1.setText("kelvin.nakpil.heru@gmail.com");
 
@@ -150,16 +157,10 @@ public class MailUI extends javax.swing.JFrame {
         jTextPane1.setText("<p style=\"margin-top: 0\">\r\n      \r\n</p>\r");
         jScrollPane2.setViewportView(jTextPane1);
 
-        jButton4.setText("Send");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
-            }
-        });
-
         jTextField3.setText("Good Day,");
 
         jButton5.setText("Attach File");
+        jButton5.setMargin(new java.awt.Insets(2, 2, 2, 2));
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
@@ -181,76 +182,101 @@ public class MailUI extends javax.swing.JFrame {
         jLabel1.setText("Body");
         jLabel1.setOpaque(true);
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Email/GlogLoading.gif"))); // NOI18N
-        jLabel2.setText("Sending Email");
+        jButton4.setText("Send");
+        jButton4.setDisabledIcon(new javax.swing.ImageIcon(getClass().getResource("/Email/16x16 Loading.gif"))); // NOI18N
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
+        jButton1.setText("Remove All");
+        jButton1.setEnabled(false);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2)
-                    .addComponent(jTextField2)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jButton7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 432, Short.MAX_VALUE)
-                            .addComponent(jTextField4, javax.swing.GroupLayout.Alignment.TRAILING)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton4))
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(jTextField2))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(jScrollPane2))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(jButton7)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 440, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                            .addGap(10, 10, 10)
+                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                            .addGap(10, 10, 10)
+                            .addComponent(jButton6)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 440, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(jButton1)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                        .addGap(10, 10, 10)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 493, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton6))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(9, 9, 9)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton7))
-                .addGap(22, 22, 22)
+                    .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton5)
-                        .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -263,37 +289,51 @@ public class MailUI extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
-        try {
-            new Thread() {
-                @Override
-                public void run() {
-                    try {
-                        getProps();
-                    } catch (IOException ex) {
-                        Logger.getLogger(MailUI.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    jButton4.setEnabled(false);
-                    jButton5.setEnabled(false);
-                    mail = new MailClient(user, pass, smtphost);
-                    htmlbody = mail.getDefaultTemplate(jTextField2.getText(), jTextField3.getText(), HTMLBodyWriter.parse(jTextPane1), company, name, position, contact, link);
-                    filemap.put("logo", logo);
-                    jLabel2.setVisible(true);
-                    if (mail.SendInlineImage(jTextField1.getText(), jTextField2.getText(), htmlbody, filemap)) {
-                        jLabel2.setVisible(false);
-                        JOptionPane.showMessageDialog(MailUI.this, "Message Sent");
-                        dispose();
-                    } else {
-                        jButton4.setEnabled(false);
+        if (sending == false) {
+            try {
+                new Thread() {
+                    @Override
+                    public void run() {
+                        try {
+                            getProps();
+                        } catch (IOException ex) {
+                            Logger.getLogger(MailUI.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        sending = true;
                         jButton5.setEnabled(false);
-                        jLabel2.setVisible(false);
-                        JOptionPane.showMessageDialog(MailUI.this, "Sending Message Failed", "Sending Failure", JOptionPane.WARNING_MESSAGE);
+                        mail = new MailClient(user, pass, smtphost);
+                        htmlbody = mail.getDefaultTemplate(jTextField2.getText(), jTextField3.getText(), HTMLBodyWriter.parse(jTextPane1), company, name, position, contact, link);
+                        filemap.put("logo", logo);
+                        jButton4.setIcon(new ImageIcon(getClass().getResource("/Email/ajax-loading.gif")));
+                        jButton4.setText("Sending");
+                        jButton4.setBorderPainted(false);
+                        jButton4.setContentAreaFilled(false);
+                        jButton4.setFocusPainted(false);
+                        jButton1.setEnabled(false);
+                        if (mail.SendInlineImage(jTextField1.getText(), jTextField2.getText(), htmlbody, filemap)) {
+                            jButton4.setIcon(null);
+                            jButton4.setText("Send");
+                            JOptionPane.showMessageDialog(MailUI.this, "Message Sent");
+                            dispose();
+                        } else {
+                            jButton4.setBorderPainted(true);
+                            jButton4.setContentAreaFilled(true);
+                            jButton4.setFocusPainted(true);
+                            jButton5.setEnabled(true);
+                            jButton4.setIcon(null);
+                            jButton4.setText("Send");
+                            jButton1.setEnabled((files.size() > 0));
+                            JOptionPane.showMessageDialog(MailUI.this, "Sending Message Failed", "Sending Failure", JOptionPane.WARNING_MESSAGE);
+                        }
+                        sending = false;
                     }
-                }
-            }.start();
+                }.start();
 
-        } catch (Exception er) {
-            er.printStackTrace();
+            } catch (Exception er) {
+                er.printStackTrace(System.out);
+            }
         }
+
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
@@ -311,23 +351,38 @@ public class MailUI extends javax.swing.JFrame {
                 if (b) {
                     long size = 0;
                     for (File e : files) {
-                        size += Files.size(e.toPath());
+                        size = size + Files.size(e.toPath());
                     }
-                    if (!((size / 1000) > 20000)) {
+                    if (!((size / 1000) > 20000) && !((Files.size(Imagechooser.getSelectedFile().toPath()) / 1000) > 20000)) {
                         files.add(Imagechooser.getSelectedFile());
                         filemap.put("file_" + files.size(), Imagechooser.getSelectedFile().getAbsolutePath());
                         jPanel2.add(new FileAttachment(Imagechooser.getSelectedFile().getName()));
                         jPanel2.updateUI();
+                        jButton1.setEnabled(true);
                     } else {
                         JOptionPane.showMessageDialog(this, "Cannot add more Attachments.", "20mb Attachment Limit", JOptionPane.WARNING_MESSAGE);
                     }
 
                 }
             }
-        } catch (Exception er) {
-
+        } catch (HeadlessException | IOException er) {
+            er.printStackTrace(System.out);
         }
     }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        if (files.size() > 0) {
+            jPanel2.removeAll();
+            jPanel2.updateUI();
+            for (int i = 1; i <= files.size(); i++) {
+                filemap.remove("file_" + i);
+            }
+            files.removeAll(files);
+            jButton1.setEnabled(false);
+        }
+
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -366,12 +421,12 @@ public class MailUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane2;
@@ -381,4 +436,6 @@ public class MailUI extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextPane jTextPane1;
     // End of variables declaration//GEN-END:variables
+    
+
 }

@@ -14,6 +14,7 @@ import java.io.OutputStream;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -49,6 +50,7 @@ public class Options extends javax.swing.JFrame {
         try {
             initComponents();
             getProps();
+            setIconImage(ImageIO.read(getClass().getResource("/Email/VMail.png")));
         } catch (IOException ex) {
             Logger.getLogger(Options.class.getName()).log(Level.SEVERE, null, ex);
         }
