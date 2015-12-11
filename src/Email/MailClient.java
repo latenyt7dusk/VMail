@@ -9,8 +9,11 @@ import com.sun.mail.smtp.SMTPMessage;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -29,6 +32,7 @@ import javax.mail.internet.InternetHeaders;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.swing.JOptionPane;
 import sun.misc.BASE64Encoder;
 
 /**
@@ -37,17 +41,21 @@ import sun.misc.BASE64Encoder;
  */
 public class MailClient {
 
+    private Properties myProps = new Properties();
+    
     private String username;
     private String password;
     private String host;
     private String port;
     private Properties props = new Properties();
+    
+    
 
-    public MailClient(final String u, final String p, final String h) {
+    public MailClient(String u,String p,String h) {
         this(u, p, h, "587");
     }
 
-    public MailClient(final String u, final String p, final String h, String po) {
+    public MailClient(String u,String p,String h, String po) {
         this.username = u;
         this.password = p;
         this.host = h;
@@ -58,6 +66,8 @@ public class MailClient {
         props.put("mail.smtp.host", host);
         props.put("mail.smtp.port", port);
     }
+    
+    
 
     public boolean Send(String to, String sub, String msg) {
         try {
@@ -288,7 +298,58 @@ public class MailClient {
         } catch (Exception er) {
             return false;
         }
+        
+    }
 
+    public String getDefaultTemplate(String subject, String intro, String body, String company, String name, String position, String contact, String namelink) {
+        String HTMLBody = "";
+        try {
+            StringBuffer html = new StringBuffer("<html>");
+            //Border
+            html.append("<body style=\"border:solid 1px #dfdfdf;\">");
+            html.append("<div style=\"font-weight:bold;font-size:16px;background-color:#232323;color:#dfdfdf;padding:5px\">");
+            html.append(subject);
+            html.append("<br></div>");
+            //Intro
+            html.append("<div style=\"font-weight:bold;padding-left:40px;padding-top:30px;padding-bottom:0px;\">");
+            html.append(intro);
+            html.append("</div><br>");
+            //Body
+            html.append("<pre style=\"padding-left:80px;padding-right:80px;text-align:justify;margin-left:10px;margin-rightt:10px;font:12px Arial;\">");
+            html.append(body);
+            html.append("</pre><br>");
+
+            //Signature
+            html.append("<table cellpadding=3D0 cellspacing=3D0 style=3D\"height:120px\">");
+            html.append("<tr>");
+            html.append("<td>");
+            html.append("<img src=\"cid:logo\" width=\"75px\" height=\"75px\"/>");
+            html.append("</td>");
+            html.append("<td style=\"vertical-align:middle; color:#636363;font:12px Arial;\">");
+            html.append("<div style=\"font-weight:bold;font-size:18px;color:#232323;\">");
+            html.append(company);
+            html.append("&#8482;</div>");
+            html.append("<a href=\"");
+            html.append(namelink);
+            html.append("\"style=\"color:#3366CC;font:14px Arial;font-weight:bold;text-decoration:none\">");
+            html.append(name);
+            html.append("</a><br>");
+            html.append(position);
+            html.append("<br>");
+            html.append(contact);
+            html.append("</td>");
+            html.append("</tr>");
+            html.append("</table>");
+            html.append("</body>");
+            html.append("</html>");
+
+            HTMLBody = html.toString();
+
+            return HTMLBody;
+        } catch (Exception er) {
+            er.printStackTrace();
+            return HTMLBody;
+        }
     }
 
     public boolean SendTest(String to, String sub, String msg, File imgatc) {

@@ -110,7 +110,6 @@ public class EmbeddedImageEmailUtil {
         }
         
         File e = new File("C:\\CFWP08.IX5");
-        
         messageBodyPart = new MimeBodyPart();
         String filesource = e.getAbsolutePath();
         String filename = e.getName();
@@ -136,29 +135,29 @@ public class EmbeddedImageEmailUtil {
         // message info
         String mailTo = "kelvin.nakpil.heru@gmail.com";
         String subject = "Test e-mail with inline images";
-        StringBuffer body = new StringBuffer("<html>");
-        body.append("<body style=\"border:solid 1px #dfdfdf;\">");
-        body.append("<div style=\"font-weight:bold;font-size:16px;background-color:#232323;color:#dfdfdf;padding:5px\">"+subject+"<br></div>");
+        StringBuffer html = new StringBuffer("<html>");
+        html.append("<body style=\"border:solid 1px #dfdfdf;\">");
+        html.append("<div style=\"font-weight:bold;font-size:16px;background-color:#232323;color:#dfdfdf;padding:5px\">"+subject+"<br></div>");
         //body.append("<a href=\"https://docs.google.com/spreadsheets/d/1P882M_EikPvolcpW1bo9JgvPwhTFRsg8W_1r88_mCd0/edit#gid=1800016514\">This is a link</a> ");
         //body.append("The first image is a chart:<br>");
         //body.append("<img src=\"cid:image1\" width=\"30%\" height=\"30%\" /><br>");
         //body.append("The second one is a cube:<br>");
         //body.append("<img src=\"cid:image2\" width=\"125px\" height=\"125px\" /><br>");
         //body.append("<div style=\"font-weight:bold;background-color:#dfdfdf;color:#636363;padding:3px;vertical-align:middle;\"><img style=\"vertical-align: middle\" src=\"cid:image1\" width=\"18px\" height=\"18px\" padding:3px;/><p>Nakpil Softwares&#8482;</p></div>");
-        body.append("<pstyle=\"margin-top:0\">asdasd</p><pstyle=\"margin-top:0\">asdsadasd</p><pstyle=\"margin-top:0\">asdasd</p>");
-        body.append("<table cellpadding=3D0 cellspacing=3D0 style=3D\"height:120px\">");
-        body.append("<tr>");
-        body.append("<td>");
-        body.append("<img src=\"cid:image1\" width=\"75px\" height=\"75px\" />");
-        body.append("</td>");
-        body.append("<td style=\"vertical-align:middle; color:#636363;font:12px Arial;\">");
-        body.append("<div style=\"font-weight:bold;font-size:18px;color:#232323;\">Nakpil Softwares Company&#8482;</div>");
-        body.append("<a href=\"https://www.facebook.com/kelvin.nakpil\"style=\"color:#3366CC;font:14px Arial;font-weight:bold;text-decoration:none\">Kelvin Nakpil</a><br>Developer<br>09055550830");
-        body.append("</td>");
-        body.append("</tr>");
-        body.append("</table>");
-        body.append("</body>");
-        body.append("</html>");
+        //body.append("<iframe src=\"www.ofsms.in/widget/index.php\" width=\"234\" height=\"350\" frameborder=\"0\" scrolling=\"no\"></iframe><noframes>Your browser does not support frame.</noframes><div><a href=\"http://www.ofsms.in\">Send Free SMS</a></div>");
+        html.append("<table cellpadding=3D0 cellspacing=3D0 style=3D\"height:120px\">");
+        html.append("<tr>");
+        html.append("<td>");
+        html.append("<img src=\"cid:image1\" width=\"75px\" height=\"75px\" alt=nslogo />");
+        html.append("</td>");
+        html.append("<td style=\"vertical-align:middle; color:#636363;font:12px Arial;\">");
+        html.append("<div style=\"font-weight:bold;font-size:18px;color:#232323;\">Nakpil Softwares Company&#8482;</div>");
+        html.append("<a href=\"https://www.facebook.com/kelvin.nakpil\"style=\"color:#3366CC;font:14px Arial;font-weight:bold;text-decoration:none\">Kelvin Nakpil</a><br>Developer<br>09055550830");
+        html.append("</td>");
+        html.append("</tr>");
+        html.append("</table>");
+        html.append("</body>");
+        html.append("</html>");
 
         // inline images
         Map<String, String> inlineImages = new HashMap<>();
@@ -167,7 +166,7 @@ public class EmbeddedImageEmailUtil {
 
         try {
             EmbeddedImageEmailUtil.send(host, port, mailFrom, password, mailTo,
-                    subject, body.toString(), inlineImages);
+                    subject, html.toString(), inlineImages);
             System.out.println("Email sent.");
         } catch (Exception ex) {
             System.out.println("Could not send email.");
