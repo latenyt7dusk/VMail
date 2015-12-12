@@ -260,6 +260,7 @@ public class MailClient {
             msg.setFrom(new InternetAddress(username));
             InternetAddress[] toAddresses = {new InternetAddress(toAddress)};
             msg.setRecipients(Message.RecipientType.TO, toAddresses);
+            
             msg.setSubject(subject);
             msg.setSentDate(new Date());
 
